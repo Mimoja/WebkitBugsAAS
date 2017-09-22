@@ -52,9 +52,9 @@
 
   $limit = '50';
   $date = '\'2017-01-01\'';
-  $private = true;
+  $private = false;
   if($private == true){
-    $privString = ' AND NOT b.state = \'UNKNOWN\'';
+    $privString = ' AND b.state = \'PRIVATE\'';
   }
   // Performing SQL query // AND b.state = \'PUBLIC\'
   $query = 'SELECT b.state, b.id, c.message, c.date, c.revision  FROM commits AS c JOIN bugs AS b ON c.revision = b.commit WHERE c.date > '.$date.$privString.' ORDER BY c.date ASC LIMIT '.$limit;
@@ -65,6 +65,9 @@
   
   if(pg_num_rows($result) == 0){
     echo "<h1>No bugs found in the Database (yet)</h1>\n";
+    echo "</body>";
+    echo "</html>";
+    exit();
   } else {
     echo '<h1> Showing up to '.$limit.' Bugs - beginning at '.$date."</h1>\n";
   }
@@ -79,7 +82,7 @@
           $class = 'class=\'green\'';
         }else if ($line['state'] == 'UNKNOWN'){
           $class = 'class=\'blue\'';
-        }
+        } 
         $message = base64_decode($line["message"]);
         $first_line = explode("\n", $message)[0];
 

@@ -7,13 +7,24 @@
     include 'header.php';
 
     $ref = htmlspecialchars($_GET["id"]);
-    if(!is_numeric($ref)){
-        echo "<span>This is not a valid commit reference</span>";
+    $bug = htmlspecialchars($_GET["bug"]);
+
+    if(!is_numeric($ref) ){
+        if(!is_numeric($bug)){
+            echo "<span>This is neighter a valid commit reference nor a valid bug id</span>";
+            exit();
+        }
+        $query = 'SELECT *  FROM commits AS c JOIN bugs AS b ON c.revision = b.commit WHERE b.id = '.pg_escape_string($bug).' ORDER BY c.date';  
+    }else{
+        $query = 'SELECT * FROM commits WHERE revision = '.pg_escape_string($ref);
+    }
+    $result = pg_query($query) or die('Query failed: ' . pg_last_error());
+    if(pg_num_rows($result) == 0){
+        echo "<h1>No bugs found in the Database (yet)</h1>\n";
+        echo "</body>";
+        echo "</html>";
         exit();
     }
-
-    $query = 'SELECT * FROM commits WHERE revision = '.pg_escape_string($ref);
-    $result = pg_query($query) or die('Query failed: ' . pg_last_error());
     $commit = pg_fetch_array($result, null, PGSQL_ASSOC);
     pg_free_result($result);
     ?>
@@ -24,33 +35,40 @@
             <a href='?id=<?php echo ($ref+1);?>' class='navigation-button undecorated right'>Next Commit</a>
             <br>
             <?php
-    $bug = htmlspecialchars($_GET["bug"]);
-    if(is_numeric($bug)){
+            if(is_numeric($bug)){
 
-        $querry_smaller = "SELECT * FROM bugs WHERE id < ".pg_escape_string($bug)." ORDER BY id DESC LIMIT 1";
-        $querry_bigger = "SELECT * FROM bugs WHERE id > ".pg_escape_string($bug)." ORDER BY id ASC LIMIT 1";
+                $querry_current = "SELECT * FROM bugs WHERE id = ".pg_escape_string($bug)." ORDER BY id DESC LIMIT 1";
+                $querry_smaller = "SELECT * FROM bugs WHERE id < ".pg_escape_string($bug)." ORDER BY id DESC LIMIT 1";
+                $querry_bigger = "SELECT * FROM bugs WHERE id > ".pg_escape_string($bug)." ORDER BY id ASC LIMIT 1";
 
-        //$result_smaller = pg_query($smaller_querry) or die('Query for smaller failed: ' . pg_last_error($dbconn));
-        //result_bigger = pg_query($bigger_querry) or die('Query for bigger failed: ' . pg_last_error());
-        
-        //$bug_smaller = pg_fetch_array($result_smaller, null, PGSQL_ASSOC)[0];
-        //$bug_bigger = pg_fetch_array($result_smaller, null, PGSQL_ASSOC)[0];
-        
-        echo "<a href='?id=212481' class='navigation-button undecorated left'>Previous Bug</a>\n";
-        echo "\t\t\t<a href='?id=212481' class='navigation-button undecorated right'>Next Bug</a>\n";
-        echo "\t\t</center>\n";
-        echo "\t\t<br>".htmlspecialchars($querry_smaller);
-        echo "\n";
-        echo "\t\t<h1>You came here for bug #".$bug."</h1>";
-    
-    } else {
-        echo "\t\t</center>";
-    }
+                $result_current = pg_query($querry_current) or die('Query for current failed: '.pg_last_error($dbconn));                
+                $result_smaller = pg_query($querry_smaller) or die('Query for smaller failed: '.pg_last_error($dbconn));
+                $result_bigger = pg_query($querry_bigger) or die('Query for bigger failed: '.pg_last_error());
+                
+                $bug_current = pg_fetch_array($result_current, null, PGSQL_ASSOC);
+                $bug_smaller = pg_fetch_array($result_smaller, null, PGSQL_ASSOC);
+                $bug_bigger  = pg_fetch_array($result_bigger, null, PGSQL_ASSOC);
+
+                echo "<a href='?id=".$bug_smaller[commit]."&bug=".$bug_smaller[id]."' class='navigation-button undecorated left'>Previous Bug</a>\n";
+                echo "\t\t\t<a href='?id=".$bug_bigger[commit]."&bug=".$bug_bigger[id]."' class='navigation-button undecorated right'>Next Bug</a>\n";
+                echo "\t\t</center>\n";
+                echo "\t\t<br>";
+                echo "\n";
+                echo "\t\t<h1>You came here for bug #".$bug."</h1>";
+                if($bug_current['state'] == 'PRIVATE'){
+                  $class = 'class=\'red\'';
+                }else if ($bug_current['state'] == 'PUBLIC'){
+                  $class = 'class=\'green\'';
+                }else {
+                  $class = 'class=\'blue\'';
+                }
+                echo "<h2 ".$class.">".$commit["revision"]," | ",$commit["author"]," | ",$commit["date"]."</h2>";
+            } else {
+                echo "\t\t</center>\n\t\t<br>";
+                echo "<h2>".$commit["revision"]," | ",$commit["author"]," | ",$commit["date"]."</h2>";
+            }
 
     ?>
-    <br>
-
-    <h2><?php echo $commit["revision"]," | ",$commit["author"]," | ",$commit["date"]; ?></h2>
     <div class='diff'>
 <?php 
             $separator = "\r\n";
