@@ -37,14 +37,16 @@ header nav a {
     min-width: 800px;
     width: 80%;
     text-align: left;
+    margin-bottom: 4em;
 }
 
 h2 {
     border: 1px solid #DEDEDE;
-    border-bottom: 0;
+    /*border-bottom: 0;*/
     font: 14px sans-serif;
     padding: 10px 6px;
     margin: 0;
+    margin-top: -1px;
     text-align: left;
 }
 

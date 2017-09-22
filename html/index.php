@@ -2,10 +2,11 @@
 <?php
     include 'header.php';
 ?>
+    <div id='wrapper'>
     <p>
     <form action=index.php method=GET>
-    Search for:
     <center>
+    <h3>Search for:</h3>
     <table style="width:20dp">
       <tr>
         <td><input type="radio" name="commit_or_bug" value="bug" checked></td>
@@ -68,6 +69,7 @@
     echo '<h1> Showing up to '.$limit.' Bugs - beginning at '.$date."</h1>\n";
   }
 
+  echo "<div id='buglist'>";
     // Printing results in HTML
     while ($line = pg_fetch_array($result, null, PGSQL_ASSOC)) {
         $class = '';
@@ -80,12 +82,13 @@
         }
         $message = base64_decode($line["message"]);
         $first_line = explode("\n", $message)[0];
+
         echo "\t";
         echo "<a class='undecorated' href='../commit.php?id=".$line['revision']."&bug=".$line['id']."'>";
-        echo "<h2 ".$class.">".$line['state']." | ".$line['id']." | ".$line['date']." | ".$first_line."</h2>\n";
+        echo "<h2 ".$class.">".$line['date']." | ".$line['state']." | ".$line['id']." | Mentioned in commit: ".$line['revision']." | ".$first_line."</h2>\n";
         echo "</a>";
     }
-  //}
+  echo "</div>";
   // Free resultset
   pg_free_result($result);
 
@@ -93,7 +96,7 @@
   pg_close($dbconn);
 
 ?>
-
+</div>
 </body>
 </html>
 
