@@ -56,7 +56,7 @@
     $privString = ' AND NOT b.state = \'UNKNOWN\'';
   }
   // Performing SQL query // AND b.state = \'PUBLIC\'
-  $query = 'SELECT b.state, b.id, c.message, c.date  FROM commits AS c JOIN bugs AS b ON c.revision = b.commit WHERE c.date > '.$date.$privString.' ORDER BY c.date ASC LIMIT '.$limit;
+  $query = 'SELECT b.state, b.id, c.message, c.date, c.revision  FROM commits AS c JOIN bugs AS b ON c.revision = b.commit WHERE c.date > '.$date.$privString.' ORDER BY c.date ASC LIMIT '.$limit;
 
   $result = pg_query($query) or die('Query failed: ' . pg_last_error());
 
@@ -81,7 +81,7 @@
         $message = base64_decode($line["message"]);
         $first_line = explode("\n", $message)[0];
         echo "\t";
-        echo "<a class='undecorated' href='../bug/".$line['id']."'>";
+        echo "<a class='undecorated' href='../commit.php?id=".$line['revision']."&bug=".$line['id']."'>";
         echo "<h2 ".$class.">".$line['state']." | ".$line['id']." | ".$line['date']." | ".$first_line."</h2>\n";
         echo "</a>";
     }

@@ -18,8 +18,28 @@
     ?>
 
     <div id="wrapper">
-    <a href='?id=<?php echo $ref-1 ?>' class='undecorated' class='navigation-button' id='left'>Previous</a>
-    <a href='?id=<?php echo $ref+1 ?>' class='undecorated' class='navigation-button' id='right'>Next</a>
+    <a href='?id=<?php echo $ref-1 ?>' class='navigation-button' class='undecorated' id='left'>Previous</a>
+    <a href='?id=<?php echo $ref+1 ?>' class='navigation-button' class='undecorated' id='right'>Next</a>
+    <?php
+        $bug = htmlspecialchars($_GET["bug"]);
+        if(is_numeric($bug)){
+            echo "<h1>You came here for bug #".$bug."</h1>";
+
+            $querry_smaller = 'SELECT * FROM bugs WHERE id < '.pg_escape_string($bug)." ORDER BY id DESC LIMIT 1";
+            $querry_bigger = 'SELECT * FROM bugs WHERE id > '.pg_escape_string($bug)." ORDER BY id ASC LIMIT 1";
+        
+            echo $querry_bigger;
+            echo "<br>commit.php line 33<br>";
+            $result_smaller = pg_query($smaller_querry) or die('Query for smaller failed: ' . pg_last_error());
+            $result_bigger = pg_query($bigger_querry) or die('Query for bigger failed: ' . pg_last_error());
+            
+            $bug_smaller = pg_fetch_array($result_smaller, null, PGSQL_ASSOC)[0];
+            $bug_bigger = pg_fetch_array($result_smaller, null, PGSQL_ASSOC)[0];
+            
+            echo "<a href='?id="."' class='navigation-button' class='undecorated' class='gravitated_right' id='left'>Previous Bug</a>";
+            echo "<a href='?id="."' class='navigation-button' class='undecorated' class='gravitated_right'  id='right'>Next Bug</a>";
+        }
+    ?>
     <br>
 
     <h2><?php echo $commit["revision"]," | ",$commit["author"]," | ",$commit["date"]; ?></h2>
