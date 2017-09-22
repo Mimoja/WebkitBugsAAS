@@ -6,8 +6,8 @@
 </head>
 <body>
     <header>
-        <a href="/" class="logo-wrapper">
-            <img src="logo.png" class="logo" alt="Abfackeln. JETZT!">
+        <a href="/">
+            <img src="logo.png" id="logo" alt="Abfackeln. JETZT!">
         </a>
         <nav>
             <a class="undecorated" href="/">Home</a> |

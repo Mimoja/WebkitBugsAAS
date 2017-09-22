@@ -14,31 +14,39 @@
 
     $query = 'SELECT * FROM commits WHERE revision = '.pg_escape_string($ref);
     $result = pg_query($query) or die('Query failed: ' . pg_last_error());
-    $commit = pg_fetch_array($result, null, PGSQL_ASSOC)
+    $commit = pg_fetch_array($result, null, PGSQL_ASSOC);
+    pg_free_result($result);
     ?>
 
-    <div id="wrapper">
-    <a href='?id=<?php echo $ref-1 ?>' class='navigation-button' class='undecorated' id='left'>Previous</a>
-    <a href='?id=<?php echo $ref+1 ?>' class='navigation-button' class='undecorated' id='right'>Next</a>
-    <?php
-        $bug = htmlspecialchars($_GET["bug"]);
-        if(is_numeric($bug)){
-            echo "<h1>You came here for bug #".$bug."</h1>";
+    <div id='wrapper'>
+        <center>
+            <a href='?id=<?php echo ($ref-1);?>' class='navigation-button undecorated left'>Previous Commit</a>
+            <a href='?id=<?php echo ($ref+1);?>' class='navigation-button undecorated right'>Next Commit</a>
+            <br>
+            <?php
+    $bug = htmlspecialchars($_GET["bug"]);
+    if(is_numeric($bug)){
 
-            $querry_smaller = 'SELECT * FROM bugs WHERE id < '.pg_escape_string($bug)." ORDER BY id DESC LIMIT 1";
-            $querry_bigger = 'SELECT * FROM bugs WHERE id > '.pg_escape_string($bug)." ORDER BY id ASC LIMIT 1";
+        $querry_smaller = "SELECT * FROM bugs WHERE id < ".pg_escape_string($bug)." ORDER BY id DESC LIMIT 1";
+        $querry_bigger = "SELECT * FROM bugs WHERE id > ".pg_escape_string($bug)." ORDER BY id ASC LIMIT 1";
+
+        //$result_smaller = pg_query($smaller_querry) or die('Query for smaller failed: ' . pg_last_error($dbconn));
+        //result_bigger = pg_query($bigger_querry) or die('Query for bigger failed: ' . pg_last_error());
         
-            echo $querry_bigger;
-            echo "<br>commit.php line 33<br>";
-            $result_smaller = pg_query($smaller_querry) or die('Query for smaller failed: ' . pg_last_error());
-            $result_bigger = pg_query($bigger_querry) or die('Query for bigger failed: ' . pg_last_error());
-            
-            $bug_smaller = pg_fetch_array($result_smaller, null, PGSQL_ASSOC)[0];
-            $bug_bigger = pg_fetch_array($result_smaller, null, PGSQL_ASSOC)[0];
-            
-            echo "<a href='?id="."' class='navigation-button' class='undecorated' class='gravitated_right' id='left'>Previous Bug</a>";
-            echo "<a href='?id="."' class='navigation-button' class='undecorated' class='gravitated_right'  id='right'>Next Bug</a>";
-        }
+        //$bug_smaller = pg_fetch_array($result_smaller, null, PGSQL_ASSOC)[0];
+        //$bug_bigger = pg_fetch_array($result_smaller, null, PGSQL_ASSOC)[0];
+        
+        echo "<a href='?id=212481' class='navigation-button undecorated left'>Previous Bug</a>\n";
+        echo "\t\t\t<a href='?id=212481' class='navigation-button undecorated right'>Next Bug</a>\n";
+        echo "\t\t</center>\n";
+        echo "\t\t<br>".htmlspecialchars($querry_smaller);
+        echo "\n";
+        echo "\t\t<h1>You came here for bug #".$bug."</h1>";
+    
+    } else {
+        echo "\t\t</center>";
+    }
+
     ?>
     <br>
 
@@ -89,8 +97,6 @@
         echo "\t\t","<br>","\n"    ;
         echo "\t","</div>","\n";
     //}
-
-    pg_free_result($result);
     pg_close($dbconn);
     ?>
     </div>
