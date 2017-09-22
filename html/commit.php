@@ -18,8 +18,8 @@
     ?>
 
     <div id="wrapper">
-    <a href='?id=<?php echo $ref-1 ?>' class='navigation-button' id='left'>Previous</a>
-    <a href='?id=<?php echo $ref+1 ?>' class='navigation-button' id='right'>Next</a>
+    <a href='?id=<?php echo $ref-1 ?>' class='undecorated' class='navigation-button' id='left'>Previous</a>
+    <a href='?id=<?php echo $ref+1 ?>' class='undecorated' class='navigation-button' id='right'>Next</a>
     <br>
 
     <h2><?php echo $commit["revision"]," | ",$commit["author"]," | ",$commit["date"]; ?></h2>

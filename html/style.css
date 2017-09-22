@@ -9,6 +9,9 @@ body {
     width: 100%;
 }
 
+a {
+    color: #DDD;
+}
 .logo {
     width: 25%;
 }
@@ -26,7 +29,6 @@ header nav {
 header nav a {
     text-transform: uppercase;
     color: inherit;
-    text-decoration: none;
 }
 
 #wrapper {
@@ -38,12 +40,12 @@ header nav a {
 }
 
 h2 {
-    border: 1px solid #FF9D00;
+    border: 1px solid #DEDEDE;
     border-bottom: 0;
     font: 14px sans-serif;
     padding: 10px 6px;
     margin: 0;
-    decoration: none;
+    text-align: left;
 }
 
 .diff {
@@ -77,6 +79,10 @@ pre {
     width: 60%;
     
 }
+
+.undecorated {
+    text-decoration: none;
+}
 .navigation-button {
     padding:  14px;   
     margin-top: 8px;
@@ -90,7 +96,6 @@ pre {
     background: linear-gradient(to bottom, #34aadc 0%,#007aff 100%);
     color: #FFCC00;
     text-align: center;  
-    text-decoration: none;
 }
 
 .navigation-button#left {
@@ -103,15 +108,12 @@ pre {
     right:0px;
 }
 
-.file {
-    
-}
 .red {
-    background-color: #fdd;
+    background-color: #600011;
 }
 .green {
-    background-color: #dfd;
+    background-color: #003310;
 }
 .blue {
-    color: #a0f;
+    background-color: #110066;
 }

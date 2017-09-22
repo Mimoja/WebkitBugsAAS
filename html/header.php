@@ -10,8 +10,8 @@
             <img src="logo.png" class="logo" alt="Abfackeln. JETZT!">
         </a>
         <nav>
-            <a href="/">Home</a> |
-            <a href="https://github.com/Mimoja/WebkitBugsAAS">Github</a> |
-            <a href="/svn">Browse SVN</a> 
+            <a class="undecorated" href="/">Home</a> |
+            <a class="undecorated" href="https://github.com/Mimoja/WebkitBugsAAS">Github</a> |
+            <a class="undecorated" href="/svn">Browse SVN</a> 
         </nav>
     </header>
